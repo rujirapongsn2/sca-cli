@@ -4,9 +4,13 @@
   "description": "Local-first AI code agent CLI",
   "main": "dist/index.js",
   "type": "module",
+  "bin": {
+    "sca": "./dist/cli/index.js"
+  },
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node src/index.ts",
+    "dev": "ts-node src/cli/index.ts",
+    "start": "node dist/cli/index.js",
     "lint": "eslint src --ext .ts",
     "lint:fix": "eslint src --ext .ts --fix",
     "format": "prettier --write src/**/*.ts",
@@ -30,12 +34,15 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.54.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "eslint": "^9.0.0",
     "eslint-config-prettier": "^10.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "husky": "^9.0.0",
     "jest": "^29.0.0",
     "lint-staged": "^15.0.0",
+    "oclif": "^4.22.70",
     "prettier": "^3.0.0",
     "ts-jest": "^29.0.0",
     "ts-node": "^10.9.0",
@@ -46,5 +53,9 @@
       "eslint --fix",
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "js-yaml": "^4.1.1"
   }
 }
