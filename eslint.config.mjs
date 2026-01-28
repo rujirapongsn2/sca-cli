@@ -1,22 +1,19 @@
+import js from "@eslint/js";
 import prettier from "eslint-plugin-prettier";
-import recommended from "eslint/recommended";
 
 export default [
+  js.configs.recommended,
   {
     files: ["src/**/*.ts"],
     languageOptions: {
       ecmaVersion: "latest",
-      sourceType: "module",
-      parserOptions: {
-        project: "./tsconfig.json"
-      }
+      sourceType: "module"
     },
     plugins: {
       prettier: prettier
     },
     rules: {
       "prettier/prettier": "error",
-      ...recommended,
       "no-console": "warn",
       "no-unused-vars": "error",
       "no-unused-expressions": "error",
