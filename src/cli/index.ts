@@ -1,6 +1,39 @@
 #!/usr/bin/env node
 
+import * as fs from 'fs';
+import * as path from 'path';
+import * as yaml from 'js-yaml';
 import { Repl } from './repl.js';
+import { Config } from './types.js';
+
+function getDefaultConfig(): Config {
+  return {
+    workspace_root: process.cwd(),
+    model: {
+      provider: 'local',
+      endpoint: 'http://localhost:11434',
+      model: 'llama3',
+    },
+    policies: {
+      exec_allowlist: ['pytest', 'npm test', 'go test', 'make test', 'cargo test'],
+      path_allowlist: [process.cwd()],
+      path_denylist: [],
+    },
+    commands: {
+      presets: {
+        test: ['npm test', 'pytest'],
+        lint: ['eslint .', 'prettier --check .'],
+        build: ['npm run build', 'make build'],
+      },
+    },
+    memory: {
+      mode: 'project',
+    },
+    privacy: {
+      strict_mode: true,
+    },
+  };
+}
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
@@ -20,8 +53,23 @@ async function main(): Promise<void> {
 
   switch (command) {
     case 'init': {
-      const scaDir = `${process.cwd()}/.sca`;
-      console.log(`✓ SCA configuration initialized at ${scaDir}`);
+      const scaDir = path.join(process.cwd(), '.sca');
+      const configPath = path.join(scaDir, 'config.yml');
+
+      fs.mkdirSync(scaDir, { recursive: true });
+
+      const config = getDefaultConfig();
+      config.workspace_root = process.cwd();
+
+      const configContent = yaml.dump(config, { indent: 2 });
+      fs.writeFileSync(configPath, configContent);
+
+      console.log(`✓ SCA configuration initialized at ${configPath}`);
+      console.log(`  Workspace: ${config.workspace_root}`);
+      console.log(`  Model Provider: ${config.model.provider}`);
+      console.log(`  Privacy Mode: ${config.privacy.strict_mode ? 'strict' : 'normal'}`);
+      console.log('');
+      console.log('Configuration created successfully!');
       break;
     }
     case '--help':
