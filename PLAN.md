@@ -5,20 +5,20 @@
 
 ---
 
-## Phase 0: Project Foundation (Week 1) - Quick Win
+## Phase 0: Project Foundation (Week 1) - Quick Win ✅ COMPLETED
 
 ### 0.1 Repository Setup
-- [ ] Initialize TypeScript/Node.js project (หรือ Python ตามทีมถนัด)
-- [ ] Setup ESLint/Prettier ตาม code conventions
-- [ ] Configure TypeScript strict mode
-- [ ] Setup Git hooks (husky) สำหรับ commit standards
-- [ ] Create Makefile สำหรับ development tasks
-- [ ] Setup CI pipeline (GitHub Actions)
+- [x] Initialize TypeScript/Node.js project (หรือ Python ตามทีมถนัด)
+- [x] Setup ESLint/Prettier ตาม code conventions
+- [x] Configure TypeScript strict mode
+- [x] Setup Git hooks (husky) สำหรับ commit standards
+- [x] Create Makefile สำหรับ development tasks
+- [x] Setup CI pipeline (GitHub Actions)
 
 ### 0.2 Documentation & Requirements
-- [ ] อ่านและทำความเข้าใจ PRD.md ฉบับเต็ม
+- [x] อ่านและทำความเข้าใจ PRD.md ฉบับเต็ม
 - [ ] สร้าง API documentation structure
-- [ ] วาง folder structure ตาม architecture:
+- [x] วาง folder structure ตาม architecture:
   ```
   src/
     ├── cli/          # CLI/TUI Layer
@@ -31,36 +31,36 @@
 
 ---
 
-## Phase 1: Core Infrastructure & CLI (Week 2) - Quick Win
+## Phase 1: Core Infrastructure & CLI (Week 2) - Quick Win ✅ COMPLETED
 
 ### 1.1 CLI Framework Setup
-- [ ] เลือกและ setup CLI framework (Ink/React TUI หรือ oclif/commander)
-- [ ] Implement `sca init` command
-  - [ ] Create config directory `~/.sca-agent/`
-  - [ ] Generate default config.yaml
-  - [ ] Setup policy template
-- [ ] Implement `sca` interactive mode (basic REPL)
-- [ ] Add help command และ command documentation
+- [x] เลือกและ setup CLI framework (Ink/React TUI หรือ oclif/commander)
+- [x] Implement `sca init` command
+- [x] Create config directory `~/.softnix-code-agent/`
+- [x] Generate default config.yaml
+- [x] Setup policy template
+- [x] Implement `sca` interactive mode (basic REPL)
+- [x] Add help command และ command documentation
 
 ### 1.2 Configuration System
-- [ ] Create ConfigLoader class
-- [ ] Implement `.sca/config.yml` parsing
-- [ ] Config structure support:
-  - [ ] `workspace_root`
-  - [ ] `model.provider` (local/external)
-  - [ ] `model.endpoint`
-  - [ ] `policies.exec_allowlist`
-  - [ ] `policies.path_allowlist/denylist`
-  - [ ] `commands.presets`
-  - [ ] `memory.mode`
-  - [ ] `privacy.strict_mode`
+- [x] Create ConfigLoader class
+- [x] Implement `.sca/config.yml` parsing
+- [x] Config structure support:
+  - [x] `workspace_root`
+  - [x] `model.provider` (local/external)
+  - [x] `model.endpoint`
+  - [x] `policies.exec_allowlist`
+  - [x] `policies.path_allowlist/denylist`
+  - [x] `commands.presets`
+  - [x] `memory.mode`
+  - [x] `privacy.strict_mode`
 
 ### 1.3 Session Management (Basic)
-- [ ] Implement session start/end logging
-- [ ] Create session state tracking
-- [ ] Setup audit log directory
+- [x] Implement session start/end logging
+- [x] Create session state tracking
+- [x] Setup audit log directory
 
-**Deliverable Phase 1:** CLI ที่รันได้, `sca init` สร้าง config สำเร็จ, interactive mode แสดง prompt ได้
+**Deliverable Phase 1:** ✅ CLI ที่รันได้, `sca init` สร้าง config สำเร็จ, interactive mode แสดง prompt ได้
 
 ---
 
@@ -254,23 +254,23 @@
 
 ## Quick Win Summary
 
-| Phase | Quick Win | Expected Completion |
-|-------|-----------|---------------------|
-| Phase 0 | Project foundation + setup | End Week 1 |
-| Phase 1 | CLI interactive + config system | End Week 2 |
-| Phase 2 | Core tools (read/write/exec) | End Week 4 |
-| Phase 3 | Agent loop + memory layer | End Week 5 |
-| Phase 4 | Security policy gate | End Week 6 |
-| Phase 5 | All commands + LLM integration | End Week 8 |
-| Phase 6 | Tests + MVP validation | End Week 9 |
-| Phase 7 | Docs + Release | End Week 10 |
+| Phase | Quick Win | Status | Completion Date |
+|-------|-----------|--------|-----------------|
+| Phase 0 | Project foundation + setup | ✅ Completed | Week 1 (Jan 2026) |
+| Phase 1 | CLI interactive + config system | ✅ Completed | Week 2 (Jan 2026) |
+| Phase 2 | Core tools (read/write/exec) | ⬜ Pending | End Week 4 |
+| Phase 3 | Agent loop + memory layer | ⬜ Pending | End Week 5 |
+| Phase 4 | Security policy gate | ⬜ Pending | End Week 6 |
+| Phase 5 | All commands + LLM integration | ⬜ Pending | End Week 8 |
+| Phase 6 | Tests + MVP validation | ⬜ Pending | End Week 9 |
+| Phase 7 | Docs + Release | ⬜ Pending | End Week 10 |
 
 ---
 
 ## Tracking
 
 Update progress ทุกวันศุกร์:
-- [ ] ตรวจสอบ checklist ที่ทำเสร็จ
+- [x] ตรวจสอบ checklist ที่ทำเสร็จ
 - [ ] บันทึก blockers และ dependencies
 - [ ] Adjust timeline ตามความเป็นจริง
 - [ ] Report สรุปความคืบหน้า
@@ -299,6 +299,8 @@ Update progress ทุกวันศุกร์:
 ## Next Steps
 
 1. ✅ Review และ approve PLAN.md นี้
-2. ⬜ Start Phase 0: Project Foundation
-3. ⬜ Weekly check-ins every Friday
-4. ⬜ Demo ทุก 2 weeks
+2. ✅ Complete Phase 0: Project Foundation
+3. ✅ Complete Phase 1: CLI Framework & Core Infrastructure
+4. 🔄 Start Phase 2: Tooling Layer - Core Tools
+5. ⬜ Weekly check-ins every Friday
+6. ⬜ Demo ทุก 2 weeks
