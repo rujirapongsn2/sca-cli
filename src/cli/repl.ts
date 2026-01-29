@@ -9,6 +9,22 @@ import { RepoInfo } from '../tools/types.js';
 
 type CommandHandler = (_args: string[]) => Promise<void>;
 
+const COMMAND_ALIASES: Record<string, string> = {
+  'h': 'help',
+  '?': 'help',
+  's': 'scan',
+  't': 'task',
+  'p': 'plan',
+  'd': 'diff',
+  'a': 'apply',
+  'r': 'run',
+  'm': 'memory',
+  'c': 'config',
+  'q': 'quit',
+  'e': 'exit',
+  'connect': 'connect',
+};
+
 function flattenStructure(
   node: RepoInfo['structure'] | undefined,
   result: Array<{ name: string; type: 'file' | 'directory' }> = []
@@ -82,19 +98,42 @@ export class Repl {
     }
 
     const parts = input.split(/\s+/);
-    const command = parts[0]?.toLowerCase().replace(/^\//, '');
+    let command = parts[0]?.toLowerCase().replace(/^\//, '');
     const args = parts.slice(1);
 
-    if (!command || !this.handlers.has(command)) {
-      this.log(`Unknown command: ${command}. Type "help" for available commands.`);
+    if (!command) {
       return;
     }
 
-    try {
-      const handler = this.handlers.get(command)!;
-      await handler(args);
-    } catch (error) {
-      this.log(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    if (this.handlers.has(command)) {
+      try {
+        const handler = this.handlers.get(command)!;
+        await handler(args);
+      } catch (error) {
+        this.log(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+      return;
+    }
+
+    if (COMMAND_ALIASES[command]) {
+      const fullCommand = COMMAND_ALIASES[command];
+      this.log(`Auto-complete: /${command} → /${fullCommand}`);
+      try {
+        const handler = this.handlers.get(fullCommand)!;
+        await handler(args);
+      } catch (error) {
+        this.log(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+      return;
+    }
+
+    const suggestions = Object.keys(COMMAND_ALIASES).filter((cmd) => cmd.startsWith(command));
+    if (suggestions.length > 0) {
+      this.log(
+        `Unknown command: "${command}". Did you mean: ${suggestions.map((s) => `/${s}`).join(', ')}?`
+      );
+    } else {
+      this.log(`Unknown command: "${command}". Type "help" for available commands.`);
     }
   }
 
@@ -154,16 +193,18 @@ export class Repl {
     this.log(`
 Available Commands:
   /connect <baseurl> <apikey>  Connect to external LLM (OpenAI-compatible)
-  /scan        Scan repository and show structure
-  /task <msg>  Start a new task
-  /plan        Show current work plan
-  /diff        Show proposed changes
-  /apply       Apply changes (requires confirmation)
-  /run <preset>  Run test/lint/build commands
-  /memory      Manage memory (show/forget/export)
-  /config      Configure settings
-  /help        Show this help
-  /quit        Exit interactive mode
+  /scan        Scan repository and show structure (s)
+  /task <msg>  Start a new task (t)
+  /plan        Show current work plan (p)
+  /diff        Show proposed changes (d)
+  /apply       Apply changes (requires confirmation) (a)
+  /run <preset>  Run test/lint/build commands (r)
+  /memory      Manage memory (show/forget/export) (m)
+  /config      Configure settings (c)
+  /help        Show this help (h, ?)
+  /quit        Exit interactive mode (q)
+
+Shortcuts: Type /h for help, /s for scan, /t for task, etc.
 `);
   }
 
