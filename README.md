@@ -28,7 +28,8 @@ Softnix Code Agent (SCA) is a local-first AI code assistant that helps developer
 
 ### 🤖 AI-Powered
 
-- **Local LLM Support**: Compatible with Ollama, vLLM, and OpenAI-compatible endpoints
+- **Local LLM Support**: Compatible with Ollama, vLLM, and local servers
+- **External LLM Support**: Connect to OpenAI, OpenRouter, or any OpenAI-compatible API
 - **Task Automation**: Intelligent task decomposition and execution
 - **Plan Generation**: Automated work plans based on task analysis
 - **Context Awareness**: Learns from your project structure and conventions
@@ -90,6 +91,35 @@ sca> /apply
 sca> /run test
 ```
 
+### Connecting to External LLM Providers
+
+Connect to external LLM providers like OpenAI, OpenRouter, or any OpenAI-compatible API:
+
+```bash
+# Start interactive mode
+sca
+
+# Connect to OpenRouter
+sca> /connect https://openrouter.ai/api/v1 sk-your-api-key
+
+# Connect to OpenAI
+sca> /connect https://api.openai.com/v1 sk-your-api-key
+
+# Connect to local server
+sca> /connect http://localhost:8000/v1 your-api-key
+
+# Start using AI features
+sca> /task Fix the authentication bug
+```
+
+**Supported Providers:**
+
+- OpenRouter.ai
+- OpenAI (api.openai.com)
+- Anthropic (via compatible endpoint)
+- Azure OpenAI
+- Local servers with OpenAI-compatible API
+
 ## Configuration
 
 Create a `.sca/config.yml` file in your project root:
@@ -97,32 +127,26 @@ Create a `.sca/config.yml` file in your project root:
 ```yaml
 workspace_root: /path/to/your/project
 model:
-  provider: local # local, openai
+  provider: local # local or external
   endpoint: http://localhost:11434
   model: llama3
-policies:
-  exec_allowlist:
-    - pytest
-    - npm test
-    - go test
-  path_denylist:
-    - .env
-    - secrets/
-commands:
-  presets:
-    test:
-      - npm test
-      - pytest
-    lint:
-      - eslint .
-      - prettier --check .
-    build:
-      - npm run build
-memory:
-  mode: project
-privacy:
-  strict_mode: true
+  api_key: '' # Required for external providers
 ```
+
+policies:
+exec_allowlist: - pytest - npm test - go test
+path_denylist: - .env - secrets/
+commands:
+presets:
+test: - npm test - pytest
+lint: - eslint . - prettier --check .
+build: - npm run build
+memory:
+mode: project
+privacy:
+strict_mode: true
+
+````
 
 ## CLI Commands
 
@@ -152,7 +176,7 @@ sca audit view --tool read_file --limit 50
 
 # Run in interactive mode
 sca interactive
-```
+````
 
 ## Architecture
 
