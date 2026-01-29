@@ -45,8 +45,8 @@ Softnix Code Agent (SCA) is a local-first AI code assistant that helps developer
 
 ```bash
 # Clone the repository
-git clone https://github.com/softnix/softnix-code-agent.git
-cd softnix-code-agent
+git clone https://github.com/rujirapongsn2/sca-cli.git
+cd sca-cli
 
 # Install dependencies
 npm install
