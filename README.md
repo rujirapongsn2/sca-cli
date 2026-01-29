@@ -69,6 +69,29 @@ npm install softnix-code-agent
 sca init
 ```
 
+### Uninstallation
+
+To remove Softnix Code Agent from your system:
+
+```bash
+# Uninstall global package
+npm uninstall -g softnix-code-agent
+
+# Remove local installation
+rm -rf /path/to/sca-cli
+
+# Remove configuration (optional)
+rm -rf ~/.config/sca
+
+# Remove audit logs (optional)
+rm -rf ~/.softnix-code-agent
+```
+
+**Note:** If you installed via npm, the configuration and logs are stored in:
+
+- Global: `~/.config/sca/`
+- Audit logs: `~/.softnix-code-agent/`
+
 ### Quick Usage
 
 ```bash
