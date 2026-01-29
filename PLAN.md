@@ -106,37 +106,42 @@
 
 ---
 
-## Phase 3: Agent Runtime & Memory (Week 5) - Quick Win
+## Phase 3: Agent Runtime & Memory (Week 5) - Quick Win ✅ COMPLETED
 
 ### 3.1 Agent Runtime Core
-- [ ] Study Letta SDK (https://github.com/letta-ai/letta-code-sdk)
-- [ ] Implement Agent loop: analyze → plan → tool-call → observe → iterate → finalize
-- [ ] Create Agent base class พร้อม context management
+- [x] Study Letta SDK (https://github.com/letta-ai/letta-code-sdk)
+- [x] Implement Agent loop: analyze → plan → tool-call → observe → iterate → finalize
+- [x] Create Agent base class พร้อม context management
 - [ ] Implement sub-agent support (lightweight) สำหรับ:
   - [ ] Refactor Agent
   - [ ] Test Agent
 - [ ] Setup message passing between main agent และ sub-agents
 
 ### 3.2 Memory Layer
-- [ ] Design memory schema (SQLite recommended)
-- [ ] Implement MemoryStore base class
-- [ ] Implement **Project Memory**:
-  - [ ] Build commands storage
-  - [ ] Coding conventions storage
-  - [ ] Domain terms storage
-- [ ] Implement **User Preference** storage:
-  - [ ] Style preferences
-  - [ ] Verbosity settings
-  - [ ] Safety level preferences
-- [ ] Add memory CRUD operations
+- [x] Design memory schema (SQLite recommended)
+- [x] Implement MemoryStore base class
+- [x] Implement **Project Memory**:
+  - [x] Build commands storage
+  - [x] Coding conventions storage
+  - [x] Domain terms storage
+- [x] Implement **User Preference** storage:
+  - [x] Style preferences
+  - [x] Verbosity settings
+  - [x] Safety level preferences
+- [x] Add memory CRUD operations
 
 ### 3.3 Memory Protection
-- [ ] Implement redaction filter (ก่อนบันทึก)
-- [ ] Add exclude paths configuration (`.env`, `secrets/`)
-- [ ] Implement secret scanner (regex + entropy)
-- [ ] Add `.env` denylist support
+- [x] Implement redaction filter (ก่อนบันทึก)
+- [x] Add exclude paths configuration (`.env`, `secrets/`)
+- [x] Implement secret scanner (regex + entropy)
+- [x] Add `.env` denylist support
 
-**Deliverable Phase 3:** Agent ทำงาน loop ได้, memory save/load ได้, project/user preferences จำได้
+**Deliverable Phase 3:** ✅ Agent ทำงาน loop ได้, memory save/load ได้, project/user preferences จำได้
+
+**Test Results (Jan 29, 2026):** 8/8 tests passed ✅
+- Agent: Create agent, start task, create plan
+- MemoryStore: Save/retrieve project info, user preferences
+- MemoryProtection: Secret detection, path exclusion, redaction
 
 ---
 
@@ -268,7 +273,7 @@
 | Phase 0 | Project foundation + setup | ✅ Completed | Week 1 (Jan 2026) |
 | Phase 1 | CLI interactive + config system | ✅ Completed | Week 2 (Jan 2026) |
 | Phase 2 | Core tools (read/write/exec) | ✅ Completed | Week 4 (Jan 2026) |
-| Phase 3 | Agent loop + memory layer | ⬜ Pending | End Week 5 |
+| Phase 3 | Agent loop + memory layer | ✅ Completed | Week 5 (Jan 2026) |
 | Phase 4 | Security policy gate | ⬜ Pending | End Week 6 |
 | Phase 5 | All commands + LLM integration | ⬜ Pending | End Week 8 |
 | Phase 6 | Tests + MVP validation | ⬜ Pending | End Week 9 |
@@ -311,6 +316,7 @@ Update progress ทุกวันศุกร์:
 2. ✅ Complete Phase 0: Project Foundation
 3. ✅ Complete Phase 1: CLI Framework & Core Infrastructure
 4. ✅ Complete Phase 2: Tooling Layer - Core Tools
-5. 🔄 Start Phase 3: Agent Runtime & Memory
-6. ⬜ Weekly check-ins every Friday
-7. ⬜ Demo ทุก 2 weeks
+5. ✅ Complete Phase 3: Agent Runtime & Memory
+6. 🔄 Start Phase 4: Security & Policy Gate
+7. ⬜ Weekly check-ins every Friday
+8. ⬜ Demo ทุก 2 weeks
