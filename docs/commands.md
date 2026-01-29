@@ -126,6 +126,33 @@ sca> /connect http://localhost:8000/v1 my-local-key
 
 **Note:** API keys are stored securely and used for Bearer token authentication.
 
+### Command Shortcuts
+
+All commands support shortcuts for faster typing:
+
+| Command   | Shortcut     | Example           |
+| --------- | ------------ | ----------------- |
+| `/help`   | `/h` or `/?` | `sca> /h`         |
+| `/scan`   | `/s`         | `sca> /s`         |
+| `/task`   | `/t`         | `sca> /t Fix bug` |
+| `/plan`   | `/p`         | `sca> /p`         |
+| `/diff`   | `/d`         | `sca> /d`         |
+| `/apply`  | `/a`         | `sca> /a`         |
+| `/run`    | `/r`         | `sca> /r test`    |
+| `/memory` | `/m`         | `sca> /m show`    |
+| `/config` | `/c`         | `sca> /c show`    |
+| `/quit`   | `/q`         | `sca> /q`         |
+| `/exit`   | `/e`         | `sca> /e`         |
+
+**Auto-complete:** Typing a partial command will auto-complete to the full command if there's a unique match.
+
+**Example:**
+
+```
+sca> /h
+Auto-complete: /h → /help
+```
+
 ### /scan
 
 Scan repository and display structure summary.
