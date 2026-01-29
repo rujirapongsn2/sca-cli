@@ -120,6 +120,34 @@ sca> /task Fix the authentication bug
 - Azure OpenAI
 - Local servers with OpenAI-compatible API
 
+### Command Shortcuts
+
+All commands support shortcuts for faster typing:
+
+| Command   | Shortcut     | Description                  |
+| --------- | ------------ | ---------------------------- |
+| `/help`   | `/h` or `/?` | Show available commands      |
+| `/scan`   | `/s`         | Scan repository structure    |
+| `/task`   | `/t`         | Start a new task             |
+| `/plan`   | `/p`         | Show current work plan       |
+| `/diff`   | `/d`         | Show proposed changes        |
+| `/apply`  | `/a`         | Apply changes                |
+| `/run`    | `/r`         | Run test/lint/build commands |
+| `/memory` | `/m`         | Manage memory                |
+| `/config` | `/c`         | Configure settings           |
+| `/quit`   | `/q`         | Exit interactive mode        |
+| `/exit`   | `/e`         | Exit interactive mode        |
+
+**Example:**
+
+```bash
+sca> /h        # Same as /help
+sca> /s        # Same as /scan
+sca> /t Fix bug  # Same as /task Fix bug
+```
+
+Auto-complete: Typing a partial command will auto-complete to the full command.
+
 ## Configuration
 
 Create a `.sca/config.yml` file in your project root:
