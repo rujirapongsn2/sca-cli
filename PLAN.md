@@ -95,6 +95,15 @@
 
 **Deliverable Phase 2:** ✅ อ่านไฟล์ได้, generate diff ได้, apply patch ได้, รัน test command (allowlist) ได้
 
+**Test Results (Jan 29, 2026):** 11/11 tests passed ✅
+- FileReader: Read with chunking & budget control
+- RepoScanner: Found 45 files, Tech: TypeScript, JSON, Markdown
+- FileGrep: Search content with regex
+- DiffGenerator: Generate unified diffs
+- SafeEditor: Safe file editing with line validation
+- CommandExecutor: Sandbox allows echo, blocks rm
+- GitStatus/GitDiff/GitCommitMsg: Working correctly
+
 ---
 
 ## Phase 3: Agent Runtime & Memory (Week 5) - Quick Win
