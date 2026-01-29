@@ -45,6 +45,7 @@ export class Repl {
 
   private registerDefaultHandlers(): void {
     this.register('help', this.handleHelp.bind(this));
+    this.register('connect', this.handleConnect.bind(this));
     this.register('scan', this.handleScan.bind(this));
     this.register('task', this.handleTask.bind(this));
     this.register('plan', this.handlePlan.bind(this));
@@ -110,9 +111,49 @@ export class Repl {
     this.handlers.set(name, handler);
   }
 
+  private async handleConnect(args: string[]): Promise<void> {
+    this.log('');
+    this.log('='.repeat(60));
+    this.log('Connect to LLM Provider');
+    this.log('='.repeat(60));
+    this.log('');
+    this.log('Usage: /connect <baseurl> <apikey>');
+    this.log('');
+    this.log('Examples:');
+    this.log('  /connect https://openrouter.ai/api/v1 sk-abc123xyz');
+    this.log('  /connect https://api.openai.com/v1 sk-abc123xyz');
+    this.log('  /connect https://localhost:8000/v1 my-api-key');
+    this.log('');
+    this.log('Supports OpenAI-compatible APIs (OpenRouter, OpenAI, Local servers)');
+    this.log('');
+
+    if (args.length >= 2) {
+      const baseUrl = args[0]!;
+      const apiKey = args[1]!;
+
+      this.log(`Connecting to: ${baseUrl}`);
+      this.log(`API Key set: ****${apiKey.slice(-4)}`);
+
+      try {
+        const config = this.configLoader.load();
+        config.model.endpoint = baseUrl;
+        config.model.api_key = apiKey;
+        config.model.provider = 'external';
+
+        this.log('');
+        this.log('✅ Connected successfully!');
+        this.log(`Endpoint: ${config.model.endpoint}`);
+        this.log(`Provider: ${config.model.provider}`);
+      } catch (error) {
+        this.log(`Warning: Could not save config. Run /config show to verify.`);
+      }
+    }
+  }
+
   private async handleHelp(): Promise<void> {
     this.log(`
 Available Commands:
+  /connect <baseurl> <apikey>  Connect to external LLM (OpenAI-compatible)
   /scan        Scan repository and show structure
   /task <msg>  Start a new task
   /plan        Show current work plan

@@ -24,6 +24,7 @@ export interface ChatCompletion {
 export interface ModelConfig {
   endpoint: string;
   model: string;
+  api_key?: string;
   temperature?: number;
   maxTokens?: number;
   timeout?: number;
@@ -54,6 +55,8 @@ export function createProvider(provider: string, config: ModelConfig): ModelProv
   switch (provider) {
     case 'local':
       return new LocalLLMProvider(config);
+    case 'external':
+      return new ExternalLLMProvider(config);
     default:
       throw new Error(`Unknown provider: ${provider}`);
   }
@@ -111,6 +114,91 @@ class LocalLLMProvider extends ModelProvider {
     try {
       const response = await fetch(`${this.config.endpoint}/api/tags`, {
         method: 'GET',
+      });
+
+      if (!response.ok) {
+        return { available: false, error: response.statusText, latency: Date.now() - start };
+      }
+
+      return {
+        available: true,
+        latency: Date.now() - start,
+        model: this.config.model,
+      };
+    } catch (error) {
+      return {
+        available: false,
+        error: error instanceof Error ? error.message : 'Unknown error',
+        latency: Date.now() - start,
+      };
+    }
+  }
+
+  close(): void {}
+}
+
+export class ExternalLLMProvider extends ModelProvider {
+  async chat(messages: Message[], _options?: Partial<ModelConfig>): Promise<ChatCompletion> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+
+    if (this.config.api_key) {
+      headers['Authorization'] = `Bearer ${this.config.api_key}`;
+    }
+
+    const response = await fetch(`${this.config.endpoint}/chat/completions`, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        model: this.config.model,
+        messages: messages.map((m) => ({ role: m.role, content: m.content })),
+        temperature: this.config.temperature ?? 0.7,
+        max_tokens: this.config.maxTokens ?? 1024,
+      }),
+    });
+
+    if (!response.ok) {
+      const error = await response.text();
+      throw new Error(`External LLM request failed: ${response.statusText} - ${error}`);
+    }
+
+    const data = (await response.json()) as Record<string, unknown>;
+    return {
+      id: (data.id as string) ?? `chat-${Date.now()}`,
+      object: 'chat.completion',
+      created: (data.created as number) ?? Date.now(),
+      model: (data.model as string) ?? this.config.model,
+      choices:
+        (data.choices as Array<Record<string, unknown>>)?.map(
+          (choice: Record<string, unknown>, index: number) => ({
+            index,
+            message: choice.message as Message,
+            finish_reason: (choice.finish_reason as string) ?? 'stop',
+          })
+        ) ?? [],
+      usage: {
+        prompt_tokens: (data.usage as Record<string, number>)?.prompt_tokens ?? 0,
+        completion_tokens: (data.usage as Record<string, number>)?.completion_tokens ?? 0,
+        total_tokens: (data.usage as Record<string, number>)?.total_tokens ?? 0,
+      },
+    };
+  }
+
+  async healthCheck(): Promise<ProviderHealth> {
+    const start = Date.now();
+    try {
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+
+      if (this.config.api_key) {
+        headers['Authorization'] = `Bearer ${this.config.api_key}`;
+      }
+
+      const response = await fetch(`${this.config.endpoint}/models`, {
+        method: 'GET',
+        headers,
       });
 
       if (!response.ok) {
