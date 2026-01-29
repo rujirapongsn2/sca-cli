@@ -64,36 +64,36 @@
 
 ---
 
-## Phase 2: Tooling Layer - Core Tools (Week 3-4) - Quick Win
+## Phase 2: Tooling Layer - Core Tools (Week 3-4) - Quick Win ✅ COMPLETED
 
 ### 2.1 File Tools
-- [ ] Implement `RepoScanner` - repo scan และ map structure
-- [ ] Implement `FileReader` - read file with chunking
-- [ ] Implement `FileGrep` - search content in files
-- [ ] Implement `FileTree` - directory tree visualization
-- [ ] Add budget control สำหรับ file reading (ไม่เกิน token limit)
+- [x] Implement `RepoScanner` - repo scan และ map structure
+- [x] Implement `FileReader` - read file with chunking
+- [x] Implement `FileGrep` - search content in files
+- [x] Implement `FileTree` - directory tree visualization
+- [x] Add budget control สำหรับ file reading (ไม่เกิน token limit)
 
 ### 2.2 Patch Tools
-- [ ] Implement `DiffGenerator` - generate unified diff
-- [ ] Implement `PatchApplier` - safe apply diff
-- [ ] Implement `SafeEditor` - edit by line ranges
-- [ ] Implement conflict handling เบื้องต้น
-- [ ] Add `git apply --check` validation before apply
+- [x] Implement `DiffGenerator` - generate unified diff
+- [x] Implement `PatchApplier` - safe apply diff
+- [x] Implement `SafeEditor` - edit by line ranges
+- [x] Implement conflict handling เบื้องต้น
+- [x] Add `git apply --check` validation before apply
 
 ### 2.3 Exec Tools (Sandbox)
-- [ ] Implement `CommandExecutor` with sandbox
-- [ ] Create allowlist mechanism สำหรับ exec commands
-- [ ] Implement cwd restriction
-- [ ] Add environment variable scrubbing
-- [ ] Support preset commands (test/lint/build)
+- [x] Implement `CommandExecutor` with sandbox
+- [x] Create allowlist mechanism สำหรับ exec commands
+- [x] Implement cwd restriction
+- [x] Add environment variable scrubbing
+- [x] Support preset commands (test/lint/build)
 
 ### 2.4 Git Tools
-- [ ] Implement `GitStatus` - show working tree status
-- [ ] Implement `GitDiff` - show staged/unstaged changes
-- [ ] Implement `GitCommitMsg` - suggest commit messages
-- [ ] Enforce manual/confirm สำหรับ actual commit
+- [x] Implement `GitStatus` - show working tree status
+- [x] Implement `GitDiff` - show staged/unstaged changes
+- [x] Implement `GitCommitMsg` - suggest commit messages
+- [x] Enforce manual/confirm สำหรับ actual commit
 
-**Deliverable Phase 2:** อ่านไฟล์ได้, generate diff ได้, apply patch ได้, รัน test command (allowlist) ได้
+**Deliverable Phase 2:** ✅ อ่านไฟล์ได้, generate diff ได้, apply patch ได้, รัน test command (allowlist) ได้
 
 ---
 
@@ -258,7 +258,7 @@
 |-------|-----------|--------|-----------------|
 | Phase 0 | Project foundation + setup | ✅ Completed | Week 1 (Jan 2026) |
 | Phase 1 | CLI interactive + config system | ✅ Completed | Week 2 (Jan 2026) |
-| Phase 2 | Core tools (read/write/exec) | ⬜ Pending | End Week 4 |
+| Phase 2 | Core tools (read/write/exec) | ✅ Completed | Week 4 (Jan 2026) |
 | Phase 3 | Agent loop + memory layer | ⬜ Pending | End Week 5 |
 | Phase 4 | Security policy gate | ⬜ Pending | End Week 6 |
 | Phase 5 | All commands + LLM integration | ⬜ Pending | End Week 8 |
@@ -301,6 +301,7 @@ Update progress ทุกวันศุกร์:
 1. ✅ Review และ approve PLAN.md นี้
 2. ✅ Complete Phase 0: Project Foundation
 3. ✅ Complete Phase 1: CLI Framework & Core Infrastructure
-4. 🔄 Start Phase 2: Tooling Layer - Core Tools
-5. ⬜ Weekly check-ins every Friday
-6. ⬜ Demo ทุก 2 weeks
+4. ✅ Complete Phase 2: Tooling Layer - Core Tools
+5. 🔄 Start Phase 3: Agent Runtime & Memory
+6. ⬜ Weekly check-ins every Friday
+7. ⬜ Demo ทุก 2 weeks
