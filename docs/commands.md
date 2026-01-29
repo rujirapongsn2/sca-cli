@@ -91,6 +91,41 @@ sca
 
 The prompt will change to `sca>` where you can enter commands.
 
+### /connect `<baseurl>` `<apikey>`
+
+Connect to an external LLM provider (OpenAI-compatible API).
+
+```bash
+sca> /connect <baseurl> <apikey>
+```
+
+**Parameters:**
+
+- `baseurl` - The base URL of the LLM API (e.g., `https://openrouter.ai/api/v1`)
+- `apikey` - Your API key for authentication
+
+**Supported Providers:**
+
+- OpenRouter.ai
+- OpenAI.com
+- Any OpenAI-compatible API endpoint
+- Local servers with OpenAI-compatible API
+
+**Examples:**
+
+```bash
+# Connect to OpenRouter
+sca> /connect https://openrouter.ai/api/v1 sk-abc123xyz...
+
+# Connect to OpenAI
+sca> /connect https://api.openai.com/v1 sk-...12345
+
+# Connect to local server
+sca> /connect http://localhost:8000/v1 my-local-key
+```
+
+**Note:** API keys are stored securely and used for Bearer token authentication.
+
 ### /scan
 
 Scan repository and display structure summary.
