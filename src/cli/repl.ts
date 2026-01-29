@@ -22,7 +22,6 @@ const COMMAND_ALIASES: Record<string, string> = {
   'c': 'config',
   'q': 'quit',
   'e': 'exit',
-  'connect': 'connect',
 };
 
 function flattenStructure(
@@ -76,10 +75,7 @@ export class Repl {
 
   async start(): Promise<void> {
     this.auditLogger.startSession();
-    this.log('Softnix Code Agent v0.1.0');
-    this.log('Type "help" for available commands.');
-    this.log('');
-    this.prompt();
+    this.printWelcome();
 
     this.rl.on('line', async (input) => {
       await this.processInput(input.trim());
@@ -90,6 +86,52 @@ export class Repl {
       this.auditLogger.endSession();
       process.exit(0);
     });
+  }
+
+  private printWelcome(): void {
+    const reset = '\x1b[0m';
+    const bold = '\x1b[1m';
+    const cyan = '\x1b[36m';
+    const green = '\x1b[32m';
+    const yellow = '\x1b[33m';
+    const magenta = '\x1b[35m';
+    const gray = '\x1b[90m';
+
+    console.log('');
+    console.log(
+      `${cyan}${bold}╔══════════════════════════════════════════════════════════════╗${reset}`
+    );
+    console.log(
+      `${cyan}${bold}║${reset}  ${cyan}${bold}Softnix${reset} ${magenta}${bold}Code${reset} ${green}${bold}Agent${reset}  ${gray}v0.1.0${reset}                             ${cyan}${bold}║${reset}`
+    );
+    console.log(
+      `${cyan}${bold}╠══════════════════════════════════════════════════════════════════════╣${reset}`
+    );
+    console.log(
+      `${cyan}${bold}║${reset}  ${yellow}🔒${reset} ${gray}Local-first AI Code Assistant${reset}                     ${cyan}${bold}║${reset}`
+    );
+    console.log(
+      `${cyan}${bold}║${reset}                                                      ${cyan}${bold}║${reset}`
+    );
+    console.log(
+      `${cyan}${bold}║${reset}  ${green}▶${reset} Type ${bold}${green}/help${reset} for available commands                 ${cyan}${bold}║${reset}`
+    );
+    console.log(
+      `${cyan}${bold}║${reset}  ${green}▶${reset} Use ${bold}${green}/h${reset} for help, ${bold}${green}/s${reset} for scan, ${bold}${green}/t${reset} for task...           ${cyan}${bold}║${reset}`
+    );
+    console.log(
+      `${cyan}${bold}║${reset}  ${green}▶${reset} Type ${bold}${green}/connect <url> <key>${reset} to connect external LLM       ${cyan}${bold}║${reset}`
+    );
+    console.log(
+      `${cyan}${bold}║${reset}                                                      ${cyan}${bold}║${reset}`
+    );
+    console.log(
+      `${cyan}${bold}║${reset}  ${gray}Press ${bold}Ctrl+C${reset} or type ${bold}${gray}/q${reset} to quit                           ${cyan}${bold}║${reset}`
+    );
+    console.log(
+      `${cyan}${bold}╚══════════════════════════════════════════════════════════════════════╝${reset}`
+    );
+    console.log('');
   }
 
   private async processInput(input: string): Promise<void> {
