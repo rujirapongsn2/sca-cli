@@ -17,7 +17,10 @@ export default [
       globals: {
         console: 'readonly',
         process: 'readonly',
-        require: 'readonly'
+        require: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        Buffer: 'readonly'
       }
     },
     plugins: {
@@ -31,8 +34,9 @@ export default [
       'eqeqeq': ['error', 'always'],
       'no-throw-literal': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      'no-case-declarations': 'error'
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
+      'no-case-declarations': 'error',
+      'no-empty': ['error', { allowEmptyCatch: true }]
     }
   },
   {

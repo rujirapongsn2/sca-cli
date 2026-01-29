@@ -107,7 +107,12 @@ export class GitTools {
 
   private getAheadBehind(): { ahead: number; behind: number } {
     try {
-      const output = this.execGit(['rev-list', '--count', '--left-right', '@{upstream}...HEAD']).stdout.trim();
+      const output = this.execGit([
+        'rev-list',
+        '--count',
+        '--left-right',
+        '@{upstream}...HEAD',
+      ]).stdout.trim();
       const [behind, ahead] = output.split('\t');
       return { ahead: parseInt(ahead ?? '0', 10) || 0, behind: parseInt(behind ?? '0', 10) || 0 };
     } catch {
@@ -169,7 +174,9 @@ export class GitTools {
   private determineChangeType(changes: { files: string[] }): string {
     const hasTests = changes.files.some((f) => f.includes('test') || f.includes('spec'));
     const hasDocs = changes.files.some((f) => f.endsWith('.md') || f.endsWith('.txt'));
-    const hasConfig = changes.files.some((f) => f.includes('config') || f.includes('.json') || f.includes('.yaml'));
+    const hasConfig = changes.files.some(
+      (f) => f.includes('config') || f.includes('.json') || f.includes('.yaml')
+    );
 
     if (hasTests && !hasDocs && !hasConfig) return 'test';
     if (hasDocs && !hasTests) return 'docs';
@@ -204,7 +211,10 @@ export class GitTools {
       return `${action} changes`;
     }
 
-    const fileNames = changes.files.slice(0, 3).map((f) => path.basename(f)).join(', ');
+    const fileNames = changes.files
+      .slice(0, 3)
+      .map((f) => path.basename(f))
+      .join(', ');
 
     if (changes.files.length > 3) {
       return `${action} ${fileNames} and ${changes.files.length - 3} more files`;
