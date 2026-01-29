@@ -72,10 +72,19 @@ sca init
 ### Quick Usage
 
 ```bash
-# Start interactive mode
+# Start interactive mode - shows beautiful welcome banner
 sca
 
-# Scan repository structure
+╔══════════════════════════════════════════════════════════════╗
+║  Softnix Code Agent  v0.1.0                                  ║
+╠══════════════════════════════════════════════════════════════╣
+║  🔒 Local-first AI Code Assistant                            ║
+║                                                              ║
+║  ▶ Type /help for available commands                          ║
+║  ▶ Use /h for help, /s for scan, /t for task...             ║
+║  ▶ Type /connect <url> <key> to connect external LLM         ║
+╚══════════════════════════════════════════════════════════════╝
+
 sca> /scan
 
 # Start a task
