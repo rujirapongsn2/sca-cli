@@ -1,12 +1,20 @@
 {
   "name": "softnix-code-agent",
   "version": "0.1.0",
-  "description": "Local-first AI code agent CLI",
+  "description": "Local-first AI Code Agent CLI - Secure, local AI-powered development assistant",
   "main": "dist/index.js",
   "type": "module",
   "bin": {
     "sca": "./dist/cli/index.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/softnix/softnix-code-agent"
+  },
+  "bugs": {
+    "url": "https://github.com/softnix/softnix-code-agent/issues"
+  },
+  "homepage": "https://github.com/softnix/softnix-code-agent#readme",
   "scripts": {
     "build": "tsc",
     "dev": "ts-node src/cli/index.ts",
@@ -16,9 +24,13 @@
     "format": "prettier --write src/**/*.ts",
     "check": "npm run lint && npm run format:check",
     "format:check": "prettier --check src/**/*.ts",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage",
-    "prepare": "husky install"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --coverage"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "keywords": [
     "ai",
     "code-agent",

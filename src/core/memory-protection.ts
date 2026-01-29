@@ -91,7 +91,10 @@ export class MemoryProtection {
       if (matches) {
         for (const match of matches) {
           found.push(`${secretPattern.name} (${secretPattern.severity})`);
-          cleanedContent = cleanedContent.replace(match, `[REDACTED ${secretPattern.name.toUpperCase().replace(' ', '_')}]`);
+          cleanedContent = cleanedContent.replace(
+            match,
+            `[REDACTED ${secretPattern.name.toUpperCase().replace(' ', '_')}]`
+          );
         }
       }
     }
@@ -145,7 +148,10 @@ export class MemoryProtection {
     return { allowed: true };
   }
 
-  createSafeMemoryBlock(content: string, _label: string): { safe: boolean; content: string; warnings: string[] } {
+  createSafeMemoryBlock(
+    content: string,
+    _label: string
+  ): { safe: boolean; content: string; warnings: string[] } {
     const warnings: string[] = [];
     const { found, cleanedContent } = this.scanForSecrets(content);
 
@@ -168,7 +174,11 @@ export class MemoryProtection {
     }
   }
 
-  addSecretPattern(name: string, pattern: RegExp, severity: 'critical' | 'high' | 'medium' | 'low'): void {
+  addSecretPattern(
+    name: string,
+    pattern: RegExp,
+    severity: 'critical' | 'high' | 'medium' | 'low'
+  ): void {
     this.secretPatterns.push({ name, pattern, severity });
   }
 

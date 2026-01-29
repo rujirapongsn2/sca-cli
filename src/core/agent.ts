@@ -4,6 +4,8 @@ import { CommandExecutor } from '../tools/exec-tools.js';
 import { RepoScanner, FileReader, FileGrep } from '../tools/file-tools.js';
 import { DiffGenerator, SafeEditor } from '../tools/patch-tools.js';
 import { GitTools } from '../tools/git-tools.js';
+import { PolicyGate } from '../security/policy-gate.js';
+import { ExtendedAuditLogger } from '../security/audit.js';
 
 export interface ToolResult {
   success: boolean;
@@ -11,7 +13,7 @@ export interface ToolResult {
   error?: string;
 }
 
-export type ToolName = 
+export type ToolName =
   | 'scan'
   | 'read'
   | 'grep'
@@ -33,6 +35,8 @@ export class Agent {
   private diffGenerator: DiffGenerator;
   private safeEditor: SafeEditor;
   private gitTools: GitTools;
+  private policyGate: PolicyGate;
+  private auditLogger: ExtendedAuditLogger;
   private config: AgentConfig;
 
   constructor(config?: Partial<AgentConfig>) {
@@ -53,6 +57,8 @@ export class Agent {
     this.diffGenerator = new DiffGenerator();
     this.safeEditor = new SafeEditor();
     this.gitTools = new GitTools();
+    this.policyGate = new PolicyGate();
+    this.auditLogger = ExtendedAuditLogger.getInstance();
   }
 
   async startTask(task: string, workspace: string = process.cwd()): Promise<AgentContext> {
@@ -363,23 +369,67 @@ export class Agent {
     const params = step.parameters as Record<string, unknown>;
     const workspace = context.workspace;
 
+    const policyCheck = this.policyGate.canCallTool(step.tool, params);
+    if (!policyCheck.allowed) {
+      this.auditLogger.logPolicyEvent({
+        tool: step.tool,
+        action: step.description,
+        parameters: params,
+        result: 'denied',
+        reason: policyCheck.reason,
+      });
+      throw new Error(`Policy denied: ${policyCheck.reason}`);
+    }
+
+    const startTime = Date.now();
+    let result = 'allowed';
+    let error: string | undefined;
+
+    try {
+      const toolResult = await this.executeTool(context, step, params, workspace);
+      return toolResult;
+    } catch (e) {
+      result = 'denied';
+      error = e instanceof Error ? e.message : 'Unknown error';
+      throw e;
+    } finally {
+      this.auditLogger.logPolicyEvent({
+        tool: step.tool,
+        action: step.description,
+        parameters: params,
+        result: result as 'allowed' | 'denied',
+        reason: error,
+        duration_ms: Date.now() - startTime,
+      });
+    }
+  }
+
+  private async executeTool(
+    _context: AgentContext,
+    step: PlanStep,
+    params: Record<string, unknown>,
+    workspace: string
+  ): Promise<string> {
     switch (step.tool) {
-      case 'scan':
+      case 'scan': {
         const repoInfo = this.repoScanner.scan(workspace);
         return `Scanned repository: ${repoInfo.fileCount} files, Tech stack: ${repoInfo.techStack.join(', ')}`;
+      }
 
-      case 'read':
-        const filePath = params.path as string || workspace;
+      case 'read': {
+        const filePath = (params.path as string) || workspace;
         const result = this.fileReader.readSafe(filePath);
         return `Read ${result.lines.total} lines from ${filePath}`;
+      }
 
-      case 'grep':
+      case 'grep': {
         const pattern = params.pattern as string;
         const grepPath = (params.path as string) || workspace;
         const results = this.fileGrep.search({ pattern, path: grepPath });
         return `Found ${results.length} matches for "${pattern}"`;
+      }
 
-      case 'edit':
+      case 'edit': {
         const editPath = params.path as string;
         const startLine = params.startLine as number;
         const endLine = params.endLine as number;
@@ -390,9 +440,12 @@ export class Agent {
         }
 
         const editResult = this.safeEditor.edit(editPath, startLine, endLine, newContent);
-        return editResult.success ? `Edited ${editPath} lines ${startLine}-${endLine}` : `Edit failed: ${editResult.message}`;
+        return editResult.success
+          ? `Edited ${editPath} lines ${startLine}-${endLine}`
+          : `Edit failed: ${editResult.message}`;
+      }
 
-      case 'diff':
+      case 'diff': {
         const originalPath = params.original as string;
         const patchedPath = params.patched as string;
         if (originalPath && patchedPath) {
@@ -400,8 +453,9 @@ export class Agent {
           return `Generated diff:\n${diff}`;
         }
         return 'Diff step requires original and patched paths';
+      }
 
-      case 'run':
+      case 'run': {
         const preset = params.preset as string;
         if (preset) {
           const runResults = await this.executor.runPreset(preset);
@@ -409,14 +463,17 @@ export class Agent {
           return `Ran ${preset}: ${successful}/${runResults.length} succeeded`;
         }
         return 'Run step requires preset parameter';
+      }
 
-      case 'git_status':
+      case 'git_status': {
         const status = this.gitTools.getStatus();
         return `Git status: ${status.branch}, ${status.modified.length} modified, ${status.untracked.length} untracked`;
+      }
 
-      case 'git_diff':
+      case 'git_diff': {
         const gitDiff = this.gitTools.getDiff();
         return `Git diff: ${gitDiff.diff.length} characters`;
+      }
 
       default:
         return `Unknown tool: ${step.tool}`;

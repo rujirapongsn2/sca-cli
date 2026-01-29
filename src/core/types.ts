@@ -34,7 +34,16 @@ export interface ToolResult {
   timestamp: Date;
 }
 
-export type AgentState = 'idle' | 'analyzing' | 'planning' | 'executing' | 'observing' | 'iterating' | 'finalizing' | 'completed' | 'error';
+export type AgentState =
+  | 'idle'
+  | 'analyzing'
+  | 'planning'
+  | 'executing'
+  | 'observing'
+  | 'iterating'
+  | 'finalizing'
+  | 'completed'
+  | 'error';
 
 export interface AgentConfig {
   modelProvider: string;
@@ -182,10 +191,14 @@ export class AgentContextManager {
       updatedAt: new Date(),
     };
 
-    this.db.prepare(`
+    this.db
+      .prepare(
+        `
       INSERT INTO agent_contexts (id, task, workspace, tools, state, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(id, task, workspace, JSON.stringify(tools), 'idle', Date.now(), Date.now());
+    `
+      )
+      .run(id, task, workspace, JSON.stringify(tools), 'idle', Date.now(), Date.now());
 
     return context;
   }
@@ -207,7 +220,9 @@ export class AgentContextManager {
   }
 
   private loadMessages(contextId: string): Message[] {
-    const rows = this.db.prepare('SELECT * FROM messages WHERE context_id = ? ORDER BY timestamp').all(contextId) as any[];
+    const rows = this.db
+      .prepare('SELECT * FROM messages WHERE context_id = ? ORDER BY timestamp')
+      .all(contextId) as any[];
     return rows.map((row) => ({
       role: row.role,
       content: row.content,
@@ -218,25 +233,52 @@ export class AgentContextManager {
   }
 
   addMessage(contextId: string, message: Message): void {
-    this.db.prepare(`
+    this.db
+      .prepare(
+        `
       INSERT INTO messages (context_id, role, content, tool_calls, tool_results, timestamp)
       VALUES (?, ?, ?, ?, ?, ?)
-    `).run(contextId, message.role, message.content, JSON.stringify(message.toolCalls || []), JSON.stringify(message.toolResults || []), message.timestamp.getTime());
+    `
+      )
+      .run(
+        contextId,
+        message.role,
+        message.content,
+        JSON.stringify(message.toolCalls || []),
+        JSON.stringify(message.toolResults || []),
+        message.timestamp.getTime()
+      );
   }
 
   updateState(contextId: string, state: AgentState): void {
-    this.db.prepare('UPDATE agent_contexts SET state = ?, updated_at = ? WHERE id = ?').run(state, Date.now(), contextId);
+    this.db
+      .prepare('UPDATE agent_contexts SET state = ?, updated_at = ? WHERE id = ?')
+      .run(state, Date.now(), contextId);
   }
 
   addPlanStep(contextId: string, step: PlanStep): void {
-    this.db.prepare(`
+    this.db
+      .prepare(
+        `
       INSERT INTO plan_steps (id, context_id, description, tool, parameters, status, timestamp)
       VALUES (?, ?, ?, ?, ?, ?, ?)
-    `).run(step.id, contextId, step.description, step.tool, JSON.stringify(step.parameters), step.status, step.timestamp.getTime());
+    `
+      )
+      .run(
+        step.id,
+        contextId,
+        step.description,
+        step.tool,
+        JSON.stringify(step.parameters),
+        step.status,
+        step.timestamp.getTime()
+      );
   }
 
   getPlanSteps(contextId: string): PlanStep[] {
-    const rows = this.db.prepare('SELECT * FROM plan_steps WHERE context_id = ? ORDER BY timestamp').all(contextId) as any[];
+    const rows = this.db
+      .prepare('SELECT * FROM plan_steps WHERE context_id = ? ORDER BY timestamp')
+      .all(contextId) as any[];
     return rows.map((row) => ({
       id: row.id,
       description: row.description,
@@ -248,8 +290,15 @@ export class AgentContextManager {
     }));
   }
 
-  updatePlanStepStatus(contextId: string, stepId: string, status: PlanStep['status'], result?: string): void {
-    this.db.prepare('UPDATE plan_steps SET status = ?, result = ? WHERE id = ? AND context_id = ?').run(status, result, stepId, contextId);
+  updatePlanStepStatus(
+    contextId: string,
+    stepId: string,
+    status: PlanStep['status'],
+    result?: string
+  ): void {
+    this.db
+      .prepare('UPDATE plan_steps SET status = ?, result = ? WHERE id = ? AND context_id = ?')
+      .run(status, result, stepId, contextId);
   }
 
   close(): void {
@@ -270,10 +319,23 @@ export class MemoryStore {
     const id = block.id || `mem_${Date.now()}_${Math.random().toString(36).slice(2)}`;
     const now = Date.now();
 
-    this.db.prepare(`
+    this.db
+      .prepare(
+        `
       INSERT OR REPLACE INTO memory_blocks (id, label, content, type, project_id, user_id, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, block.label, block.content, block.type, block.projectId || null, block.userId || null, now, now);
+    `
+      )
+      .run(
+        id,
+        block.label,
+        block.content,
+        block.type,
+        block.projectId || null,
+        block.userId || null,
+        now,
+        now
+      );
 
     return id;
   }
@@ -296,8 +358,14 @@ export class MemoryStore {
 
   getMemoryByLabel(label: string, projectId?: string): MemoryBlock[] {
     const rows = projectId
-      ? this.db.prepare('SELECT * FROM memory_blocks WHERE label = ? AND project_id = ? ORDER BY updated_at DESC').all(label, projectId)
-      : this.db.prepare('SELECT * FROM memory_blocks WHERE label = ? ORDER BY updated_at DESC').all(label);
+      ? this.db
+          .prepare(
+            'SELECT * FROM memory_blocks WHERE label = ? AND project_id = ? ORDER BY updated_at DESC'
+          )
+          .all(label, projectId)
+      : this.db
+          .prepare('SELECT * FROM memory_blocks WHERE label = ? ORDER BY updated_at DESC')
+          .all(label);
 
     return rows.map((row: any) => ({
       id: row.id,
@@ -318,10 +386,23 @@ export class MemoryStore {
   saveProjectInfo(info: Omit<ProjectInfo, 'id'> & { id?: string }): string {
     const id = info.id || `proj_${Date.now()}_${Math.random().toString(36).slice(2)}`;
 
-    this.db.prepare(`
+    this.db
+      .prepare(
+        `
       INSERT OR REPLACE INTO project_info (id, name, path, tech_stack, build_commands, test_commands, conventions, domain_terms)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, info.name, info.path, JSON.stringify(info.techStack), JSON.stringify(info.buildCommands), JSON.stringify(info.testCommands), JSON.stringify(info.conventions), JSON.stringify(info.domainTerms));
+    `
+      )
+      .run(
+        id,
+        info.name,
+        info.path,
+        JSON.stringify(info.techStack),
+        JSON.stringify(info.buildCommands),
+        JSON.stringify(info.testCommands),
+        JSON.stringify(info.conventions),
+        JSON.stringify(info.domainTerms)
+      );
 
     return id;
   }
@@ -342,20 +423,39 @@ export class MemoryStore {
     };
   }
 
-  saveUserPreferences(prefs: Omit<UserPreferences, 'id' | 'createdAt' | 'updatedAt'>, userId = 'default'): string {
+  saveUserPreferences(
+    prefs: Omit<UserPreferences, 'id' | 'createdAt' | 'updatedAt'>,
+    userId = 'default'
+  ): string {
     const id = `pref_${userId}`;
     const now = Date.now();
 
-    this.db.prepare(`
+    this.db
+      .prepare(
+        `
       INSERT OR REPLACE INTO user_preferences (id, user_id, style, verbosity, safety_level, preferred_language, auto_confirm, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `).run(id, userId, prefs.style, prefs.verbosity, prefs.safetyLevel, prefs.preferredLanguage, prefs.autoConfirm ? 1 : 0, now, now);
+    `
+      )
+      .run(
+        id,
+        userId,
+        prefs.style,
+        prefs.verbosity,
+        prefs.safetyLevel,
+        prefs.preferredLanguage,
+        prefs.autoConfirm ? 1 : 0,
+        now,
+        now
+      );
 
     return id;
   }
 
   getUserPreferences(userId = 'default'): UserPreferences | null {
-    const row = this.db.prepare('SELECT * FROM user_preferences WHERE user_id = ?').get(userId) as any;
+    const row = this.db
+      .prepare('SELECT * FROM user_preferences WHERE user_id = ?')
+      .get(userId) as any;
     if (!row) return null;
 
     return {

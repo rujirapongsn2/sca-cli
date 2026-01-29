@@ -72,6 +72,11 @@ async function main(): Promise<void> {
       console.log('Configuration created successfully!');
       break;
     }
+    case 'audit': {
+      const { auditView } = await import('./audit-view.js');
+      await auditView();
+      break;
+    }
     case '--help':
     case 'help':
       showHelp();
@@ -98,6 +103,7 @@ Usage: sca [command]
 
 Commands:
   init                Initialize configuration
+  audit               View audit logs
   interactive         Start interactive mode (default)
   /scan               Scan repository
   /task <message>     Start a task
