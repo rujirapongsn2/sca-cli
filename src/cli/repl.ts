@@ -220,6 +220,7 @@ export class Repl {
         config.model.endpoint = baseUrl;
         config.model.api_key = apiKey;
         config.model.provider = 'external';
+        this.configLoader.save();
 
         this.log('');
         this.log('✅ Connected successfully!');
@@ -456,14 +457,41 @@ Shortcuts: Type /h for help, /s for scan, /t for task, etc.
       this.log(`Workspace: ${config.workspace_root}`);
       this.log(`Model Provider: ${config.model.provider}`);
       this.log(`Model Endpoint: ${config.model.endpoint}`);
+      if (config.model.api_key) {
+        this.log(`API Key: ****${config.model.api_key.slice(-4)}`);
+      }
       this.log(`Privacy Mode: ${config.privacy.strict_mode ? 'strict' : 'normal'}`);
       return;
     }
 
     if (args[0] === 'set' && args[1]) {
-      const [key, value] = args[1].split('=');
-      this.log(`Setting ${key}=${value}...`);
-      this.log('(Config modification not implemented in this demo)');
+      const parts = args[1].split('=');
+      if (parts.length !== 2) {
+        this.log('Usage: /config set <key>=<value>');
+        return;
+      }
+      const keyPath = parts[0]!;
+      const value = parts[1]!;
+      try {
+        const config = this.configLoader.load();
+        const keys = keyPath.split('.');
+        if (keys.length === 2 && keys[0] === 'model' && keys[1] === 'endpoint') {
+          config.model.endpoint = value;
+        } else if (keys.length === 2 && keys[0] === 'model' && keys[1] === 'provider') {
+          config.model.provider = value as 'local' | 'external';
+        } else if (keys.length === 2 && keys[0] === 'model' && keys[1] === 'api_key') {
+          config.model.api_key = value;
+        } else if (keys.length === 1 && keys[0] === 'endpoint') {
+          config.model.endpoint = value;
+        } else {
+          this.log(`Unknown config key: ${keyPath}`);
+          return;
+        }
+        this.configLoader.save();
+        this.log(`✅ Set ${keyPath}=${value}`);
+      } catch (error) {
+        this.log(`Error: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
       return;
     }
 

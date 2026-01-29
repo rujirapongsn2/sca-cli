@@ -55,6 +55,20 @@ export class ConfigLoader {
     return this.config;
   }
 
+  save(): void {
+    if (!this.config) {
+      throw new Error('No config loaded to save');
+    }
+
+    const dir = path.dirname(this.configPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
+    const yamlContent = yaml.dump(this.config, { indent: 2 });
+    fs.writeFileSync(this.configPath, yamlContent, 'utf-8');
+  }
+
   getPath(): string {
     return this.configPath;
   }
